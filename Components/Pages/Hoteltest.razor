@@ -35,6 +35,7 @@ case 1:
             <p>Password  <InputText @bind-Value="Model!.Password" /></p>
             <button type="submit">Submit</button> <button class="btn btn-primary" @onclick="() => GuestMenu(0)">Back</button>
             </EditForm>
+            <p>@ErrorMsg</p>
         break;
     }
 break;
@@ -56,6 +57,7 @@ break;
     }
     private void GuestMenu(int i)
     {
+        Model = new Guest(null!, null!, null!, null!);
         GuestChoice = i;
     }
 
@@ -76,6 +78,19 @@ break;
     private void SignUp()
     {
         var guest = new Guest(Model!.Name, Model.PhoneNr, Model.Email, Model.Password);
-        GuestList.AddGuest(guest);
+        if(Model.Name != null && Model.PhoneNr != null && Model.Email != null && Model.Password !=null)
+        {
+            GuestList.AddGuest(guest, out string outputMessage);
+            ErrorMsg = outputMessage;
+            if(outputMessage == "Signup succesful")
+            {
+            Hotel.SessionGuest = guest;
+            NavigationManager.NavigateTo("GuestInterface");
+            }
+        }
+        else
+        {
+            ErrorMsg = "Error, all fields must be filled in";
+        }
     }
 }

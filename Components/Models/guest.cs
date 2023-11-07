@@ -73,9 +73,17 @@ class GuestList
 {
     public static List<Guest> guestList = new List<Guest>();
 
-    public static void AddGuest(Guest guest)
+    public static void AddGuest(Guest guest, out string outputMessage)
     {
-        guestList.Add(guest);
+        if(guestList.Exists(x => x.Email.Contains(guest.Email)))
+        {
+            outputMessage = "Error, account with the specified already exists";
+        }
+        else
+        {
+            guestList.Add(guest);
+            outputMessage = "Signup succesful";
+        }
     }
 
     //Method that logs in guest user with pre registred email and password through registration method

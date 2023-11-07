@@ -539,7 +539,7 @@ static class ConsoleUI
         Console.Write("Password: ");
         string password = Console.ReadLine()!;
         Guest guest = new Guest(name, phoneNr, email, password);
-        GuestList.AddGuest(guest);
+        GuestList.AddGuest(guest, out string outputMessage);
         return guest;
     }
 
