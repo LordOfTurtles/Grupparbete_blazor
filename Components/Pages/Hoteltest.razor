@@ -40,7 +40,11 @@ case 1:
     }
 break;
 case 2:
-    <p>Staff</p>
+    <EditForm Model="@AdminPassword" OnSubmit="@AdminLogIn">
+    <p>Password  <InputText @bind-Value="AdminPassword" /></p>
+    <button type="submit">Submit</button> <button class="btn btn-primary" @onclick="() => MainMenu(0)">Back</button>
+    </EditForm>
+    <p>@ErrorMsg</p>
 break;
 }
 
@@ -51,8 +55,12 @@ break;
     private string ErrorMsg = "";
     private int MenuChoice = 0;
     private int GuestChoice = 0;
+
+    private string? AdminPassword {get; set;}
+
     private void MainMenu(int i)
     {
+        AdminPassword = "";
         MenuChoice = i;
     }
     private void GuestMenu(int i)
@@ -91,6 +99,14 @@ break;
         else
         {
             ErrorMsg = "Error, all fields must be filled in";
+        }
+    }
+
+    private void AdminLogIn()
+    {
+        if(AdminPassword == Hotel.Password)
+        {
+            NavigationManager.NavigateTo("AdminInterface");
         }
     }
 }
