@@ -54,7 +54,7 @@ break;
 
     private void Submit()
     {
-        Guest guest = GuestList.LogInAttempt(Model.Email, Model.Password, out string outputMessage);
+        Guest guest = GuestList.LogInAttempt(Model!.Email, Model.Password, out string outputMessage);
         if(guest == null)
         {
             ErrorMsg = outputMessage;
