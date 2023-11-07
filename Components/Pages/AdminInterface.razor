@@ -3,3 +3,40 @@
 @inject NavigationManager NavigationManager
 
 <PageTitle>AdminInterface</PageTitle>
+<h1>staff</h1>
+
+@if(SessionDetails.IsLoggedIn == true)
+{
+    <p>Logged in as Admin <button class="btn btn-primary" @onclick="() => LogOut()">Log Out</button></p>
+    <div>
+        <button class="btn btn-primary" @onclick="() => AdmineChoice(1)">Check availability</button>
+        <div class = "divider"/>
+        <button class="btn btn-primary" @onclick="() => AdmineChoice(2)">Start a new booking</button>
+        <div class = "divider"/>
+        <button class="btn btn-primary" @onclick="() => AdmineChoice(3)">Write a review</button>
+        <div class = "divider"/>
+        <button class="btn btn-primary" @onclick="() => AdmineChoice(4)">Read reviews</button>
+    </div>
+}
+else
+{
+    <p>Need to be logged in to access Admin functions</p>
+    <button class="btn btn-primary" @onclick="() => LogOut()">Main menu</button>
+}
+
+
+
+@code
+{
+    void LogOut()
+    {
+        SessionDetails.IsLoggedIn = false;
+        NavigationManager.NavigateTo("Hoteltest");
+    }
+
+    void AdmineChoice(int i)
+    {
+        
+
+    }
+}

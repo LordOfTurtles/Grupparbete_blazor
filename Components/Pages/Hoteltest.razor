@@ -40,13 +40,14 @@ case 1:
     }
 break;
 case 2:
-    <EditForm Model="@AdminPassword" OnSubmit="@AdminLogIn">
-    <p>Password  <InputText @bind-Value="AdminPassword" /></p>
+    <EditForm Model="@Admin" OnSubmit="@AdminLogIn">
+    <p>Password  <InputText @bind-Value="Admin.AdminPassword" /></p>
     <button type="submit">Submit</button> <button class="btn btn-primary" @onclick="() => MainMenu(0)">Back</button>
     </EditForm>
     <p>@ErrorMsg</p>
 break;
 }
+
 
 @code
 {
@@ -56,11 +57,20 @@ break;
     private int MenuChoice = 0;
     private int GuestChoice = 0;
 
-    private string? AdminPassword {get; set;}
+   
+
+    private AdminInterfaceSubmit Admin {get; set;}
+
+    class AdminInterfaceSubmit
+    {
+        public string? AdminPassword {get; set;}
+    }
+
+    
 
     private void MainMenu(int i)
     {
-        AdminPassword = "";
+        Admin = new AdminInterfaceSubmit();
         MenuChoice = i;
     }
     private void GuestMenu(int i)
@@ -104,9 +114,11 @@ break;
 
     private void AdminLogIn()
     {
-        if(AdminPassword == Hotel.Password)
+        if(Admin.AdminPassword == Hotel.Password)
         {
+            SessionDetails.IsLoggedIn = true;
             NavigationManager.NavigateTo("AdminInterface");
         }
+        
     }
 }
