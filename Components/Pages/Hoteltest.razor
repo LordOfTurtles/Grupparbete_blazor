@@ -20,14 +20,20 @@ case 1:
         break;
         case 1:
             <EditForm Model="@Model" OnSubmit="@Submit">
-            <p>   Email  <InputText @bind-Value="Model!.Email" /></p>
+            <p>Email  <InputText @bind-Value="Model!.Email" /></p>
             <p>Password  <InputText @bind-Value="Model!.Password" /></p>
             <button type="submit">Submit</button>
             </EditForm>
             <p>@ErrorMsg</p>
         break;
         case 2:
-
+            <EditForm Model="@Model" OnSubmit="@SignUp">
+            <p>Name  <InputText @bind-Value="Model!.Name" /></p>
+            <p>Phone Number  <InputText @bind-Value="Model!.PhoneNr" /></p>
+            <p>Email  <InputText @bind-Value="Model!.Email" /></p>
+            <p>Password  <InputText @bind-Value="Model!.Password" /></p>
+            <button type="submit">Submit</button>
+            </EditForm>
         break;
     }
 break;
@@ -65,5 +71,10 @@ break;
             ErrorMsg = outputMessage;
             NavigationManager.NavigateTo("GuestInterface");
         }
+    }
+    private void SignUp()
+    {
+        var guest = new Guest(Model!.Name, Model.PhoneNr, Model.Email, Model.Password);
+        GuestList.AddGuest(guest);
     }
 }
