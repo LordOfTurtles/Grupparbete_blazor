@@ -1,0 +1,35 @@
+@page "/GuestInterface"
+@attribute [RenderModeInteractiveServer]
+@inject NavigationManager NavigationManager
+<style>
+    .divider{
+    width:auto;
+    height:5px;
+    display:inline-block;
+    }
+</style>
+<p>Logged in as @Hotel.SessionGuest.Name <button class="btn btn-primary" @onclick="() => LogOut()">Log Out</button></p>
+<div>
+    <button class="btn btn-primary" @onclick="() => GuestChoice(1)">Check availability</button>
+    <div class = "divider"/>
+    <button class="btn btn-primary" @onclick="() => GuestChoice(2)">Start a new booking</button>
+    <div class = "divider"/>
+    <button class="btn btn-primary" @onclick="() => GuestChoice(3)">Write a review</button>
+    <div class = "divider"/>
+    <button class="btn btn-primary" @onclick="() => GuestChoice(4)">Read reviews</button>
+</div>
+
+
+@code
+{
+    static int option;
+    static void GuestChoice(int i)
+    {
+        option = i;
+    }
+    private void LogOut()
+    {
+        NavigationManager.NavigateTo("hoteltest");
+    }
+}
+
