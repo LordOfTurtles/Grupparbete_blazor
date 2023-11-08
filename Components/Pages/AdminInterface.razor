@@ -46,12 +46,50 @@
             break;
 
             case 2:
+
+            if(Hotel.Rooms.Count == 0)
+            {
+                <p>No rooms available to remove in the hotel</p>
+            }
+            for(int i = 0; i < Hotel.Rooms.Count; i++)
+            {
+                Count count = new Count();
+                count.c = i;
+                <p>@Hotel.Rooms[i]</p>
+                <button class="btn btn-primary" @onclick="() => RemoveRoom(count.c)">Remove</button>
+            }
+            <button class="btn btn-primary" @onclick="() => AddRemove(0)">Back</button>
             break;
         }
 
         break;
         
         case 2:
+
+            for(int i = 0; i < Hotel.Rooms.Count; i++)
+                {
+                    if(Hotel.Rooms[i].roomBookings.Count > 0 &&
+                       Hotel.Rooms[i].roomBookings.Exists(x => x.IsChecked.Equals(false)))
+                    {
+                        Count room = new Count();
+                        room.c = i;
+                        <h1>@Hotel.Rooms[i].RoomNr @Hotel.Rooms[i].Description</h1>
+                        int x = 0;
+                        foreach(Booking b in Hotel.Rooms[i].roomBookings)
+                        {
+                            if(b.IsChecked == false)
+                            {
+                                Count count = new Count();
+                                count.c = x;
+                                <p>@b.Guest.Name @b</p>
+                                <button class="btn btn-primary" @onclick="() => CheckIn(room.c, count.c)">Check in</button>
+                                x++;
+                            }
+                        }
+                    }
+                }
+            <button class="btn btn-primary" @onclick="() => AdmineChoice(0)">Back</button>
+            <p>@ErrorMsg</p>
         break;
         
         case 3:
@@ -78,6 +116,11 @@ else
     private int IntAddRemove = 0;
     private int Mode = 0;
 
+    class Count
+    {
+        public int c;
+    }
+
     void LogOut()
     {
         SessionDetails.IsLoggedIn = false;
@@ -93,6 +136,17 @@ else
     void AddRemove(int i)
     {
         IntAddRemove = i;
+    }
+
+    void RemoveRoom(int i)
+    {
+        Hotel.RemoveRoom(i);
+    }
+
+    void CheckIn(int i, int b)
+    {
+        Hotel.CheckIn(i, b);
+        ErrorMsg = $"{Hotel.Rooms[i].roomBookings[b].Guest.Name} has been check-in succesfully";
     }
 
     private void Submit()
