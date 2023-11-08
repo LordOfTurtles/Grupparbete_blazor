@@ -186,7 +186,7 @@ static class ConsoleUI
                                 int uInput = int.Parse(Console.ReadLine()!) -1;
                                 if(uInput < Hotel.Rooms[i].roomBookings.Count)
                                 {
-                                    Hotel.CheckIn(i, uInput);
+                                    Hotel.CheckIn(Hotel.Rooms[i].roomBookings[uInput]);
                                     Console.WriteLine($"Room number: {Hotel.Rooms[i].RoomNr}, '{Hotel.Rooms[i].Description}' has been checked into.");
                                 }
                                 else

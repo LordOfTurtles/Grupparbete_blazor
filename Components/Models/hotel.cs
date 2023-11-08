@@ -37,9 +37,9 @@ class Hotel
     }
 
     //method for staff to check in guests to a room
-    public static void CheckIn(int i, int uInput)
+    public static void CheckIn(Booking b)
     {
-        Rooms[i].roomBookings[uInput].IsChecked = true;
+        b.IsChecked = true;
     }
 
     //method for staff to check guests out of their room
