@@ -140,7 +140,7 @@ static class ConsoleUI
                         Console.Write("Floor number: ");
                         int floorNr = int.Parse(Console.ReadLine()!);
 
-                        Hotel.AddRoom(new Room(roomNr, description, roomPrice, capacity, floorNr));
+                        Hotel.AddRoom(new Room(roomNr, description, roomPrice, capacity, floorNr), out string outputMessage);
                         //adds a new room with the details specified by the staff through console inputs
                     }
                     else if (input.ToLower() == "r")

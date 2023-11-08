@@ -8,15 +8,59 @@
 @if(SessionDetails.IsLoggedIn == true)
 {
     <p>Logged in as Admin <button class="btn btn-primary" @onclick="() => LogOut()">Log Out</button></p>
-    <div>
-        <button class="btn btn-primary" @onclick="() => AdmineChoice(1)">Check availability</button>
-        <div class = "divider"/>
-        <button class="btn btn-primary" @onclick="() => AdmineChoice(2)">Start a new booking</button>
-        <div class = "divider"/>
-        <button class="btn btn-primary" @onclick="() => AdmineChoice(3)">Write a review</button>
-        <div class = "divider"/>
-        <button class="btn btn-primary" @onclick="() => AdmineChoice(4)">Read reviews</button>
-    </div>
+    switch (Mode)
+    {
+        case 0:
+        <div>
+            <button class="btn btn-primary" @onclick="() => AdmineChoice(1)">Add or remove a room</button>
+            <div class = "divider"/>
+            <button class="btn btn-primary" @onclick="() => AdmineChoice(2)">Check-in guest</button>
+            <div class = "divider"/>
+            <button class="btn btn-primary" @onclick="() => AdmineChoice(3)">Check-out guest</button>
+            <div class = "divider"/>
+            <button class="btn btn-primary" @onclick="() => AdmineChoice(4)">Check room availability</button>
+        </div>    
+        break;
+
+        case 1:
+        switch (IntAddRemove)
+        {
+            case 0:
+            <p>Do you want to add or remove a room?</p>
+            <div>
+            <button class="btn btn-primary" @onclick="() => AddRemove(1)">Add</button>
+            <button class="btn btn-primary" @onclick="() => AddRemove(2)">Remove</button>
+            </div>
+            break;
+
+            case 1:
+            <EditForm Model="@Model" OnSubmit="@Submit">
+            <p>Room number  <InputText @bind-Value="Model.RoomNr" /></p>
+            <p>Description  <InputText @bind-Value="Model.Description" /></p>
+            <p>Room price  <InputNumber @bind-Value="Model.RoomPrice" /></p>
+            <p>Max capacity  <InputNumber @bind-Value="Model.Capacity" /></p> 
+            <p>Floor number  <InputNumber @bind-Value="Model.FloorNr" /></p>       
+            <button type="submit">Submit</button> <button class="btn btn-primary" @onclick="() => AddRemove(0)">Back</button>
+            </EditForm>
+            <p>@ErrorMsg</p>
+            break;
+
+            case 2:
+            break;
+        }
+
+        break;
+        
+        case 2:
+        break;
+        
+        case 3:
+        break;
+        
+        case 4:
+        break;
+    }
+
 }
 else
 {
@@ -28,6 +72,12 @@ else
 
 @code
 {
+    protected override void OnInitialized() => Model ??= new(null!, null!, 0, 0, 0);
+    private string ErrorMsg = "";
+    private Room? Model {get; set;}
+    private int IntAddRemove = 0;
+    private int Mode = 0;
+
     void LogOut()
     {
         SessionDetails.IsLoggedIn = false;
@@ -36,7 +86,28 @@ else
 
     void AdmineChoice(int i)
     {
-        
+        Mode = i;
 
+    }
+
+    void AddRemove(int i)
+    {
+        IntAddRemove = i;
+    }
+
+    private void Submit()
+    {
+        Room room = new Room(Model.RoomNr, Model.Description, Model.RoomPrice, Model.Capacity, Model.FloorNr);
+
+        if(Model.RoomNr != null && Model.Description != null && Model.RoomPrice != null && 
+           Model.Capacity !=null && Model.FloorNr != null)
+        {
+            Hotel.AddRoom(room, out string outputMessage);
+            ErrorMsg = outputMessage;
+        }
+        else
+        {
+            ErrorMsg = "Error, all fields must be filled in";
+        }
     }
 }

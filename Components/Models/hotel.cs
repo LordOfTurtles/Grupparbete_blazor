@@ -16,9 +16,18 @@ class Hotel
     //list of rooms at the hotel
     
     //method for staff to add rooms through the console
-    public static void AddRoom(Room r)
+    public static void AddRoom(Room r, out string outputMessage)
     {
-        Rooms.Add(r);
+        if(Rooms.Exists(x => x.RoomNr.Contains(r.RoomNr)))
+        {
+            outputMessage = "Error, room with the specified number already exists";
+        }
+        else
+        {
+            Rooms.Add(r);
+            outputMessage = "Room added succesfully";
+        }
+
     }
 
     //method for staff to remove rooms through the console
