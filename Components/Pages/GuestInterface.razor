@@ -135,8 +135,8 @@ else
     class Temp
     {
         public Room room = new Room();
-        public DateOnly startDate = new DateOnly();
-        public DateOnly endDate = new DateOnly();
+        public DateOnly startDate = DateOnly.FromDateTime(DateTime.Now);
+        public DateOnly endDate = DateOnly.FromDateTime(DateTime.Now);
     }
 }
 
