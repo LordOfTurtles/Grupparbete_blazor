@@ -1,6 +1,8 @@
 @page "/GuestInterface"
 @attribute [RenderModeInteractiveServer]
 @inject NavigationManager NavigationManager
+@using System.Web
+@using System.Text.RegularExpressions;
 <style>
     .divider{
     width:auto;
@@ -16,15 +18,37 @@
 else
 {
     <p>Logged in as @Hotel.SessionGuest!.Name <button class="btn btn-primary" @onclick="() => LogOut()">Log Out</button></p>
-    <div>
-        <button class="btn btn-primary" @onclick="() => GuestChoice(1)">Check availability</button>
-        <div class = "divider"/>
-        <button class="btn btn-primary" @onclick="() => GuestChoice(2)">Start a new booking</button>
-        <div class = "divider"/>
-        <button class="btn btn-primary" @onclick="() => GuestChoice(3)">Write a review</button>
-        <div class = "divider"/>
-        <button class="btn btn-primary" @onclick="() => GuestChoice(4)">Read reviews</button>
-    </div>
+    switch(option)
+    {
+        case 0:
+        <div>
+            <button class="btn btn-primary" @onclick="() => GuestChoice(1)">Check availability</button>
+            <div class = "divider"/>
+            <button class="btn btn-primary" @onclick="() => GuestChoice(2)">Start a new booking</button>
+            <div class = "divider"/>
+            <button class="btn btn-primary" @onclick="() => GuestChoice(3)">Write a review</button>
+            <div class = "divider"/>
+            <button class="btn btn-primary" @onclick="() => GuestChoice(4)">Read reviews</button>
+        </div>
+        break;
+        case 1:
+            foreach(Room r in Hotel.Rooms)
+            {
+                <p>
+                @((MarkupString)r.ToString())
+                </p>
+            }
+        break;
+        case 2:
+        
+        break;
+        case 3:
+
+        break;
+        case 4:
+        
+        break;
+    }
 }
 
 @code
@@ -38,6 +62,14 @@ else
     {
         NavigationManager.NavigateTo("hoteltest");
         Hotel.SessionGuest = null;
+    }
+
+    private string RoomToHTML(Room r)
+    {
+        string body = $"{r}";
+        string html = body.Replace(@"\n", "<br/>");
+
+        return html;
     }
 }
 

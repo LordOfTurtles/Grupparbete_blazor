@@ -118,15 +118,18 @@
         case 4:
             foreach(Room r in Hotel.Rooms)
             {
-                <p>@r </p>
+                string body = r.ToString();
                 if(r.roomBookings.Exists(x => x.IsChecked == true))
                 {
-                    <p> Status: Unavailable</p> 
+                    body += "<br /><b>Status:</b> Unavailable";
                 }
                 else
                 {
-                    <p>Status: available</p>
+                    body += "<br /><b>Status:</b> Available";
                 }
+                <p>
+                @((MarkupString)body)
+                </p>
             }
             <button class="btn btn-primary" @onclick="() => AdmineChoice(0)">Back</button>
             break;
@@ -143,7 +146,7 @@ else
 
 @code
 {
-    protected override void OnInitialized() => Model ??= new(null!, null!, 0, 0, 0);
+    protected override void OnInitialized() => Model ??= new();
     private string ErrorMsg = "";
     private Room? Model {get; set;}
     private int IntAddRemove = 0;
@@ -197,8 +200,8 @@ else
     {
         Room room = new Room(Model.RoomNr, Model.Description, Model.RoomPrice, Model.Capacity, Model.FloorNr);
 
-        if(Model.RoomNr != null && Model.Description != null && Model.RoomPrice != null && 
-           Model.Capacity !=null && Model.FloorNr != null)
+        if(Model.RoomNr != null && Model.Description != null && Model.RoomPrice != 0 && 
+           Model.Capacity !=0 && Model.FloorNr != 0)
         {
             Hotel.AddRoom(room, out string outputMessage);
             ErrorMsg = outputMessage;
