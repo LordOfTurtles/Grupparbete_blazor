@@ -38,9 +38,32 @@ else
                 @((MarkupString)r.ToString())
                 </p>
             }
+            <button class="btn btn-primary" @onclick="() => GuestChoice(0)">Back</button>
         break;
         case 2:
         
+        <EditForm Model="@Model" OnSubmit="@Submit">
+        <p>What is your max price per night?  <InputNumber @bind-Value="Model.room.RoomPrice" /></p>
+        <p>How many guests are staying?  <InputNumber @bind-Value="Model.room.Capacity" /></p>
+        <p>What date would you like to start your booking?  <InputDate @bind-Value="Model.startDate" /></p>
+        <p>What date would you like to end your booking?  <InputDate @bind-Value="Model.endDate" /></p> 
+        <button type="submit">Submit</button> 
+        <button class="btn btn-primary" @onclick="() => GuestChoice(0)">Back</button>
+        </EditForm>
+
+        if(tempRooms.Count() > 0)
+        {
+            foreach(Room r in tempRooms)
+            {
+                safe ++;
+                <p>@((MarkupString)r.ToString())</p>
+                <button class="btn btn-primary" @onclick="() => BookRoom(r)">Book this room</button>
+            }
+        }
+        else
+        {
+            <p>There is no match for your request</p>
+        }
         break;
         case 3:
 
@@ -53,6 +76,12 @@ else
 
 @code
 {
+    private int safe = 0;
+    private string message = "";
+    private Temp? Model {get; set;}
+
+    protected override void OnInitialized() => Model ??= new();
+
     static int option;
     static void GuestChoice(int i)
     {
@@ -70,6 +99,44 @@ else
         string html = body.Replace(@"\n", "<br/>");
 
         return html;
+    }
+
+    List<Room> tempRooms = new List<Room>();
+
+    private void Submit()
+    {
+    tempRooms.Clear();
+    if(Model.startDate < Model.endDate)
+    {
+        int safe = 0; 
+        foreach(Room r in Hotel.Rooms)
+        {
+            if(Model.room.RoomPrice >= r.RoomPrice && Model.room.Capacity <= r.Capacity && 
+                Guest.CompareDates(Model.startDate, Model.endDate, r))
+            {
+                tempRooms.Add(r);
+            }
+
+        }
+        
+    }
+
+    else
+    {
+        message = "End date must be later than start date";
+    }
+    }
+
+    private void BookRoom(Room r)
+    {
+        Guest.BookRoom(r, Model.startDate, Model.endDate, Hotel.SessionGuest);
+    }
+
+    class Temp
+    {
+        public Room room = new Room();
+        public DateOnly startDate = new DateOnly();
+        public DateOnly endDate = new DateOnly();
     }
 }
 
