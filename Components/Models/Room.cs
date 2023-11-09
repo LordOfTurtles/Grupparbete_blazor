@@ -22,10 +22,15 @@ public class Room
         FloorNr = floorNr;
     }
 
+    public Room()
+    {
+        
+    }
+
     //An override method that overrides whats typed out in the console when a room object is the input 
     public override string ToString()
     {
-        string rom = $"Room number: {RoomNr}. '{Description}'\nPrice: {RoomPrice}kr Capacity: {Capacity} \nCurrently booked dates: ";
+        string rom = $"<b>Room number:</b> {RoomNr}. '{Description}'<br /><b>Price:</b> {RoomPrice}kr <br /><b>Capacity:</b> {Capacity} <br /><b>Currently booked dates:</b> ";
         
         if(roomBookings.Count > 0)
         
@@ -34,7 +39,7 @@ public class Room
 
                 foreach(Booking bp in roomBookings)
                 {
-                    rom += $"\n{bp.BookingPeriod.StartDate} until {bp.BookingPeriod.EndDate} ";
+                    rom += $"<br />{bp.BookingPeriod.StartDate} until {bp.BookingPeriod.EndDate} ";
                 }
                 //types out every booking that is currently made for room "r"
                 rom += "";
