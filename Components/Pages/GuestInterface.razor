@@ -57,15 +57,48 @@ else
             {
                 safe ++;
                 <p>@((MarkupString)r.ToString())</p>
-                <button class="btn btn-primary" @onclick="() => BookRoom(r)">Book this room</button>
+                if(Guest.CompareDates(tempDates.startDate, tempDates.endDate, r) == true)
+                {
+                    <p>
+                    <button class="btn btn-primary" @onclick="() => BookRoom(r)">Book this room</button>
+                    </p>
+                }
+                else
+                {
+                    <p>Room is already booked during period @tempDates.startDate - @tempDates.endDate</p>
+                }
             }
         }
-        else
-        {
-            <p>There is no match for your request</p>
-        }
+        <p>@message</p>
         break;
         case 3:
+        if(Hotel.SessionGuest.guestPastBookings.Count > 0)
+        {
+            if(tempBooking.Guest == null)
+            {
+                <p><b>Which booking would you like to write a review for?</b></p>
+                foreach(Booking b in Hotel.SessionGuest.guestPastBookings)
+                {
+                    <p>
+                        @((MarkupString)b.ToString())
+                    </p>
+                    <p>
+                        <button class="btn btn-primary" @onclick="() => PickReview(b)">Review</button>
+                    </p>
+                }
+            }
+            else
+            {
+                <p>
+                @((MarkupString)tempBooking.ToString())
+                </p>
+                <EditForm style="height: 300%; width: 300%" Model="@tempBooking" OnSubmit="@Review">
+                <p><InputText @bind-Value="tempBooking.Review" /></p>
+                <button type="submit">Submit</button>
+                </EditForm>
+
+            }
+        }
 
         break;
         case 4:
@@ -76,16 +109,21 @@ else
 
 @code
 {
+    private string review;
     private int safe = 0;
     private string message = "";
     private Temp? Model {get; set;}
+    private Booking tempBooking = new Booking();
+    private Temp? tempDates = new Temp();
 
     protected override void OnInitialized() => Model ??= new();
 
-    static int option;
-    static void GuestChoice(int i)
+    static int option = 0;
+    private void GuestChoice(int i)
     {
         option = i;
+        Model = new Temp();
+        tempRooms.Clear();
     }
     private void LogOut()
     {
@@ -105,31 +143,48 @@ else
 
     private void Submit()
     {
-    tempRooms.Clear();
-    if(Model.startDate < Model.endDate)
-    {
-        int safe = 0; 
-        foreach(Room r in Hotel.Rooms)
+        tempRooms.Clear();
+        if(Model.startDate < Model.endDate && Model.room.Capacity > 0)
         {
-            if(Model.room.RoomPrice >= r.RoomPrice && Model.room.Capacity <= r.Capacity && 
-                Guest.CompareDates(Model.startDate, Model.endDate, r))
+            foreach(Room r in Hotel.Rooms)
             {
-                tempRooms.Add(r);
-            }
+                if(Model.room.RoomPrice >= r.RoomPrice && Model.room.Capacity <= r.Capacity)
+                {
+                    tempDates!.startDate = Model.startDate;
+                    tempDates!.endDate = Model.endDate;
+                    tempRooms.Add(r);
+                    message = "";
+                }
 
+            }    
         }
-        
-    }
-
-    else
-    {
-        message = "End date must be later than start date";
-    }
+        else if(Model.startDate >= Model.endDate)
+        {
+            message = "End date must be later than start date";
+        }
+        else
+        {
+            message = "Guests staying must be more than 0";
+        }
     }
 
     private void BookRoom(Room r)
     {
-        Guest.BookRoom(r, Model.startDate, Model.endDate, Hotel.SessionGuest);
+        if(Guest.CompareDates(tempDates.startDate, tempDates.endDate, r) == true)
+        {
+        Guest.BookRoom(r, tempDates.startDate, tempDates.endDate, Hotel.SessionGuest);
+        message = "Room successfully booked";
+        }
+    }
+
+    private void PickReview(Booking b)
+    {
+        tempBooking = b;
+    }
+
+    private void Review()
+    {
+        
     }
 
     class Temp

@@ -32,6 +32,10 @@ public class Booking
         TotalOccupants = totalOccupants;
         IsChecked = false;       
     }
+    public Booking()
+    {
+        
+    }
     //An override method that overrides whats typed out in the console when a booking object is the input 
     public override string ToString()
     {
@@ -41,7 +45,7 @@ public class Booking
         {
             output += $" '{r.RoomNr}. {r.Description}'";
         }
-        output += $"\n{BookingPeriod.StartDate} - {BookingPeriod.EndDate}";
+        output += $"<br />{BookingPeriod.StartDate} - {BookingPeriod.EndDate}";
         return output;
     }
 }

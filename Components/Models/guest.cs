@@ -47,16 +47,15 @@ public class Guest
     //Method that checks that a timeperiod doesnt coincide with an already existing booking
     public static bool CompareDates(DateOnly startDate, DateOnly endDate, Room room)
     {
-        foreach(Booking b in room.roomBookings)
+        if(room.roomBookings.Count > 0)
         {
-            if(startDate >= b.BookingPeriod.StartDate && startDate < b.BookingPeriod.EndDate || 
-               endDate > b.BookingPeriod.StartDate && endDate <= b.BookingPeriod.EndDate)
+            foreach(Booking b in room.roomBookings)
             {
-                return false;
-            }
-            else
-            {
-                return true;
+                if(startDate >= b.BookingPeriod.StartDate && startDate < b.BookingPeriod.EndDate || 
+                endDate > b.BookingPeriod.StartDate && endDate <= b.BookingPeriod.EndDate)
+                {
+                    return false;
+                }
             }
         }
         return true;
