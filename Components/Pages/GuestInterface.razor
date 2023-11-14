@@ -72,19 +72,22 @@ else
         <p>@message</p>
         break;
         case 3:
-        if(Hotel.SessionGuest.guestPastBookings.Count > 0)
+        if(Hotel.SessionGuest.guestPastBookings.Count > 0 && Hotel.SessionGuest.guestPastBookings.Exists(x => x.Review == null))
         {
             if(tempBooking.Guest == null)
             {
                 <p><b>Which booking would you like to write a review for?</b></p>
                 foreach(Booking b in Hotel.SessionGuest.guestPastBookings)
                 {
+                    if(b.Review == null)
+                    {
                     <p>
                         @((MarkupString)b.ToString())
                     </p>
                     <p>
                         <button class="btn btn-primary" @onclick="() => PickReview(b)">Review</button>
                     </p>
+                    }
                 }
             }
             else
@@ -92,17 +95,45 @@ else
                 <p>
                 @((MarkupString)tempBooking.ToString())
                 </p>
-                <EditForm style="height: 300%; width: 300%" Model="@tempBooking" OnSubmit="@Review">
-                <p><InputText @bind-Value="tempBooking.Review" /></p>
+                <EditForm Model="@tempReview" OnSubmit="@Review">
+                <div>
+                    <InputTextArea class="form-control" style="height: 150px; width: 500px" @bind-Value="tempReview.review" />
+                </div>
+                <div>
                 <button type="submit">Submit</button>
+                </div>
                 </EditForm>
 
             }
         }
+        else
+        {
+            <p><b>No bookings available to review</b></p>
+        }
+        <div>
+        <button class="btn btn-primary" @onclick="() => GuestChoice(0)">Back</button>
+        </div>
 
         break;
         case 4:
-        
+        if(Hotel.SessionGuest.guestPastBookings.Count > 0 && Hotel.SessionGuest.guestPastBookings.Exists(x => x.Review != null))
+        {
+            foreach(Booking b in Hotel.SessionGuest.guestPastBookings)
+            {
+                if(b.Review != null)
+                {
+                    <p>@((MarkupString)b.ToString())</p>
+                    <p>@b.Review</p>
+                }
+            }
+        }
+        else
+        {
+            <p><b>No reviews made so far</b></p>
+        }
+        <div>
+        <button class="btn btn-primary" @onclick="() => GuestChoice(0)">Back</button>
+        </div>
         break;
     }
 }
@@ -115,7 +146,7 @@ else
     private Temp? Model {get; set;}
     private Booking tempBooking = new Booking();
     private Temp? tempDates = new Temp();
-
+    private TempReview tempReview = new TempReview();
     protected override void OnInitialized() => Model ??= new();
 
     static int option = 0;
@@ -184,9 +215,14 @@ else
 
     private void Review()
     {
-        
+        tempBooking.Review = tempReview.review;
+        tempBooking = new Booking();
     }
 
+    class TempReview
+    {
+        public string review = "";
+    }
     class Temp
     {
         public Room room = new Room();

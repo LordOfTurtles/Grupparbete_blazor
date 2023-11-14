@@ -30,7 +30,7 @@ public class Booking
             TotalPrice += r.RoomPrice;
         }
         TotalOccupants = totalOccupants;
-        IsChecked = false;       
+        IsChecked = false;    
     }
     public Booking()
     {
@@ -72,7 +72,7 @@ public class BookingPeriod
     public override string ToString()
     {   
 
-        return $"The booking starts at: {StartDate} The booking ends at: {EndDate}";
+        return $"Start: {StartDate} End: {EndDate}";
     }
 
 

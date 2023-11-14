@@ -8,7 +8,7 @@ public class Guest
     public string Email{get; set;}
     public string Password{get; set;}
     public List<Booking> guestBookings = new List<Booking>();
-    public List<Booking> guestPastBookings = new List<Booking>();   
+    public List<Booking> guestPastBookings = new List<Booking>();
     //list of reviews made by a specific guest
 
     //constructor for the guest class, does not include a list of reviews which are added when written by the guest

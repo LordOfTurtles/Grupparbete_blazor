@@ -49,6 +49,7 @@ class Hotel
         b.IsChecked = false;
         r.pastBookings.Add(b);
         b.Guest.guestPastBookings.Add(b);
+        b.Guest.guestBookings.Remove(b);
         r.roomBookings.Remove(b);
 
     }

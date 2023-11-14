@@ -81,7 +81,7 @@
                             {
                                 Count c  = new Count();
                                 c.booking = b;
-                                <p>@b.Guest.Name @b</p>
+                                <p>@b.Guest.Name <br /> @b.BookingPeriod</p>
                                 <button class="btn btn-primary" @onclick="() => CheckIn(c.booking)">Check in</button>
                                 x++;
                             }
@@ -93,6 +93,7 @@
         break;
         
         case 3:
+            <h1>Currently checked in guests</h1>
             for(int i = 0; i < Hotel.Rooms.Count; i++)
             {
 
@@ -105,7 +106,7 @@
                                 Count c = new Count();
                                 c.room = Hotel.Rooms[i];
                                 c.booking = b;
-                                <p>@b.Guest.Name @b</p>
+                                <p>@b.Guest.Name <br /> @((MarkupString)b.ToString())</p>
                                 <button class="btn btn-primary" @onclick="() => CheckOut(c.room, c.booking)">Check Out</button>
 
                                 
