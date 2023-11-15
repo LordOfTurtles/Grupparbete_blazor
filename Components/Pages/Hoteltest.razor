@@ -1,4 +1,4 @@
-@page "/Hoteltest"
+@page "/"
 @attribute [RenderModeInteractiveServer]
 @inject NavigationManager NavigationManager
 
@@ -6,20 +6,23 @@
 
 <h1>Hotel</h1>
 
-
+<!-- A switch menu for picking between guest or staff-->
 @switch(MenuChoice)
 {
 case 0:
     <button class="btn btn-primary" @onclick="() => MainMenu(1)">Guest</button>    <button class="btn btn-primary" @onclick="() => MainMenu(2)">Staff</button> 
 break;
 case 1:
+    <!--a switch menu for logging in or signing up as a guest -->
     switch(GuestChoice)
     {
         case 0:
             <button class="btn btn-primary" @onclick="() => GuestMenu(1)">Log In</button>    <button class="btn btn-primary" @onclick="() => GuestMenu(2)">Sign Up</button>
             <button class="btn btn-primary" @onclick="() => MainMenu(0)">Back</button>
         break;
+        
         case 1:
+            <!--a form model where the user can atempt to login with password and email -->
             <EditForm Model="@Model" OnSubmit="@Submit">
             <p>Email  <InputText @bind-Value="Model!.Email" /></p>
             <p>Password  <InputText @bind-Value="Model!.Password" /></p>
@@ -28,6 +31,7 @@ case 1:
             <p>@ErrorMsg</p>
         break;
         case 2:
+            <!--a form where the guest signs up with Name, phone number, email and password-->
             <EditForm Model="@Model" OnSubmit="@SignUp">
             <p>Name  <InputText @bind-Value="Model!.Name" /></p>
             <p>Phone Number  <InputText @bind-Value="Model!.PhoneNr" /></p>
@@ -40,6 +44,7 @@ case 1:
     }
 break;
 case 2:
+    <!--A form model for admin to login with the admin password-->
     <EditForm Model="@Admin" OnSubmit="@AdminLogIn">
     <p>Password  <InputText @bind-Value="Admin.AdminPassword" /></p>
     <button type="submit">Submit</button> <button class="btn btn-primary" @onclick="() => MainMenu(0)">Back</button>
@@ -67,18 +72,20 @@ break;
     }
 
     
-
+    //a methode that ereases the admin login password and switching menu options
     private void MainMenu(int i)
     {
         Admin = new AdminInterfaceSubmit();
         MenuChoice = i;
     }
+    //a methode that ereases the guest details and switching options
     private void GuestMenu(int i)
     {
         Model = new Guest(null!, null!, null!, null!);
         GuestChoice = i;
     }
 
+    //a method that tries to call on the the LoginAttempt method and sets to current sessionguest if succesfull
     private void Submit()
     {
         Guest guest = GuestList.LogInAttempt(Model!.Email, Model.Password, out string outputMessage);
@@ -88,11 +95,13 @@ break;
         }
         else
         {
-            Hotel.SessionGuest = guest;
+            SessionDetails.SessionGuest = guest;
             ErrorMsg = outputMessage;
             NavigationManager.NavigateTo("GuestInterface");
         }
     }
+
+    //a method for guest to sign up, checks if successfull or tells that some fields are missing. navigates to the guestinterface if succesfull
     private void SignUp()
     {
         var guest = new Guest(Model!.Name, Model.PhoneNr, Model.Email, Model.Password);
@@ -102,7 +111,7 @@ break;
             ErrorMsg = outputMessage;
             if(outputMessage == "Signup succesful")
             {
-            Hotel.SessionGuest = guest;
+            SessionDetails.SessionGuest = guest;
             NavigationManager.NavigateTo("GuestInterface");
             }
         }
@@ -112,6 +121,7 @@ break;
         }
     }
 
+    //checks the admin password then navigates to the adminInterface
     private void AdminLogIn()
     {
         if(Admin.AdminPassword == Hotel.Password)

@@ -3,34 +3,33 @@
 @inject NavigationManager NavigationManager
 @using System.Web
 @using System.Text.RegularExpressions;
-<style>
-    .divider{
-    width:auto;
-    height:5px;
-    display:inline-block;
-    }
-</style>
-@if(Hotel.SessionGuest == null)
+
+<!--checks if there is currently a guest whos logged in -->
+@if(SessionDetails.SessionGuest == null)
 {
     <p>Need to be logged in to access guest functions</p>
     <button class="btn btn-primary" @onclick="() => LogOut()">Main menu</button>
 }
 else
 {
-    <p>Logged in as @Hotel.SessionGuest!.Name <button class="btn btn-primary" @onclick="() => LogOut()">Log Out</button></p>
+    //displayes the current guest name on screen, options to also logout
+    <p>Logged in as @SessionDetails.SessionGuest!.Name <button class="btn btn-primary" @onclick="() => LogOut()">Log Out</button></p>
+
+    //a switch statment for guest menu options
     switch(option)
     {
         case 0:
         <div>
             <button class="btn btn-primary" @onclick="() => GuestChoice(1)">Check availability</button>
-            <div class = "divider"/>
+            
             <button class="btn btn-primary" @onclick="() => GuestChoice(2)">Start a new booking</button>
-            <div class = "divider"/>
+            
             <button class="btn btn-primary" @onclick="() => GuestChoice(3)">Write a review</button>
-            <div class = "divider"/>
+            
             <button class="btn btn-primary" @onclick="() => GuestChoice(4)">Read reviews</button>
         </div>
         break;
+        //checks room availability in hotels.roms
         case 1:
             foreach(Room r in Hotel.Rooms)
             {
@@ -40,10 +39,11 @@ else
             }
             <button class="btn btn-primary" @onclick="() => GuestChoice(0)">Back</button>
         break;
+        //lets guest create a booking with room and dates
         case 2:
-        
+        //a form where the guest specifies what the guest is looking for
         <EditForm Model="@Model" OnSubmit="@Submit">
-        <p>What is your max price per night?  <InputNumber @bind-Value="Model.room.RoomPrice" /></p>
+        <p>What is your max price per night?  <InputNumber @bind-Value="Model!.room.RoomPrice" /></p>
         <p>How many guests are staying?  <InputNumber @bind-Value="Model.room.Capacity" /></p>
         <p>What date would you like to start your booking?  <InputDate @bind-Value="Model.startDate" /></p>
         <p>What date would you like to end your booking?  <InputDate @bind-Value="Model.endDate" /></p> 
@@ -51,13 +51,14 @@ else
         <button class="btn btn-primary" @onclick="() => GuestChoice(0)">Back</button>
         </EditForm>
 
+        // an if statment that check if theres any rooms that matches the guests inputs, also checks so no bookings can overlap with the desired booking period
         if(tempRooms.Count() > 0)
         {
             foreach(Room r in tempRooms)
             {
                 safe ++;
                 <p>@((MarkupString)r.ToString())</p>
-                if(Guest.CompareDates(tempDates.startDate, tempDates.endDate, r) == true)
+                if(Guest.CompareDates(tempDates!.startDate, tempDates.endDate, r) == true)
                 {
                     <p>
                     <button class="btn btn-primary" @onclick="() => BookRoom(r)">Book this room</button>
@@ -72,12 +73,13 @@ else
         <p>@message</p>
         break;
         case 3:
-        if(Hotel.SessionGuest.guestPastBookings.Count > 0 && Hotel.SessionGuest.guestPastBookings.Exists(x => x.Review == null))
+        //if statment thats checks if the guest has any past bookings that they have not yet written a review for
+        if(SessionDetails.SessionGuest.guestPastBookings.Count > 0 && SessionDetails.SessionGuest.guestPastBookings.Exists(x => x.Review == null))
         {
             if(tempBooking.Guest == null)
             {
                 <p><b>Which booking would you like to write a review for?</b></p>
-                foreach(Booking b in Hotel.SessionGuest.guestPastBookings)
+                foreach(Booking b in SessionDetails.SessionGuest.guestPastBookings)
                 {
                     if(b.Review == null)
                     {
@@ -116,9 +118,10 @@ else
 
         break;
         case 4:
-        if(Hotel.SessionGuest.guestPastBookings.Count > 0 && Hotel.SessionGuest.guestPastBookings.Exists(x => x.Review != null))
+        //chekcs if there is any bookings that the guest has written a review for
+        if(SessionDetails.SessionGuest.guestPastBookings.Count > 0 && SessionDetails.SessionGuest.guestPastBookings.Exists(x => x.Review != null))
         {
-            foreach(Booking b in Hotel.SessionGuest.guestPastBookings)
+            foreach(Booking b in SessionDetails.SessionGuest.guestPastBookings)
             {
                 if(b.Review != null)
                 {
@@ -140,42 +143,39 @@ else
 
 @code
 {
-    private string review;
+    private string? review;
     private int safe = 0;
     private string message = "";
     private Temp? Model {get; set;}
     private Booking tempBooking = new Booking();
     private Temp? tempDates = new Temp();
     private TempReview tempReview = new TempReview();
+    List<Room> tempRooms = new List<Room>();
+
     protected override void OnInitialized() => Model ??= new();
 
     static int option = 0;
+
+    //a method that controls guest menu options and resets editform data when stitching option
     private void GuestChoice(int i)
     {
         option = i;
         Model = new Temp();
         tempRooms.Clear();
     }
+
+    //a method that logs out the guest and navigates to home
     private void LogOut()
     {
-        NavigationManager.NavigateTo("hoteltest");
-        Hotel.SessionGuest = null;
+        NavigationManager.NavigateTo("");
+        SessionDetails.SessionGuest = null;
     }
 
-    private string RoomToHTML(Room r)
-    {
-        string body = $"{r}";
-        string html = body.Replace(@"\n", "<br/>");
-
-        return html;
-    }
-
-    List<Room> tempRooms = new List<Room>();
-
+    //a method that compares the guest inputs for start and denddate, roomprice and capacity.
     private void Submit()
     {
         tempRooms.Clear();
-        if(Model.startDate < Model.endDate && Model.room.Capacity > 0)
+        if(Model!.startDate < Model.endDate && Model.room.Capacity > 0)
         {
             foreach(Room r in Hotel.Rooms)
             {
@@ -199,20 +199,23 @@ else
         }
     }
 
+    //a method that books the specified room for the booking period if there are no overlaps
     private void BookRoom(Room r)
     {
-        if(Guest.CompareDates(tempDates.startDate, tempDates.endDate, r) == true)
+        if(Guest.CompareDates(tempDates!.startDate, tempDates.endDate, r) == true)
         {
-        Guest.BookRoom(r, tempDates.startDate, tempDates.endDate, Hotel.SessionGuest);
+        Guest.BookRoom(r, tempDates.startDate, tempDates.endDate, SessionDetails.SessionGuest!);
         message = "Room successfully booked";
         }
     }
 
+    //a method that sets which booking that are being reviwed
     private void PickReview(Booking b)
     {
         tempBooking = b;
     }
 
+    //a method that saves the review to the booking
     private void Review()
     {
         tempBooking.Review = tempReview.review;

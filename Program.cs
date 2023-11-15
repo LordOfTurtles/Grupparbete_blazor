@@ -1,11 +1,12 @@
 using Grupparbete_OOP_grund_blazor.Components;
+using Grupparbete_OOP_grund_blazor.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
-    ConsoleUI.Initialize();
+    SessionDetails.Initialize();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

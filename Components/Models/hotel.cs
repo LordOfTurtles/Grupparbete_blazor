@@ -7,7 +7,7 @@ namespace Grupparbete_OOP_grund_blazor.Models;
 class Hotel
 
 {
-    public static Guest? SessionGuest {get; set; }
+   
     public string? Name;
     public int CurrentGuests;
 
@@ -48,7 +48,7 @@ class Hotel
     {
         b.IsChecked = false;
         r.pastBookings.Add(b);
-        b.Guest.guestPastBookings.Add(b);
+        b.Guest!.guestPastBookings.Add(b);
         b.Guest.guestBookings.Remove(b);
         r.roomBookings.Remove(b);
 

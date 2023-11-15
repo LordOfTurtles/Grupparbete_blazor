@@ -4,11 +4,11 @@ public class Booking
 {
     //class for bookings made by guests, inludes a reference for a guest, a reference for a list of rooms, a reference for a bookingperiod, the total price for the booking, the total number of occupants and a review
     
-    public Guest Guest;
+    public Guest? Guest;
     //the guest who made the booking
     public List<Room> BookedRooms = new List<Room>();
     //a list of rooms that are booked
-    public BookingPeriod BookingPeriod;
+    public BookingPeriod? BookingPeriod;
     //a bookingperiod specifying a startdate and enddate
     public bool IsChecked;
     public double TotalPrice;
@@ -45,7 +45,7 @@ public class Booking
         {
             output += $" '{r.RoomNr}. {r.Description}'";
         }
-        output += $"<br />{BookingPeriod.StartDate} - {BookingPeriod.EndDate}";
+        output += $"<br />{BookingPeriod!.StartDate} - {BookingPeriod.EndDate}";
         return output;
     }
 }
