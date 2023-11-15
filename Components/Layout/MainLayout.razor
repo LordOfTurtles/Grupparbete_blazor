@@ -10,11 +10,11 @@
         <div class="top-row px-4">
         @if(SessionDetails.SessionGuest != null)
         {
-            <div>Logged in as @SessionDetails.SessionGuest!.Name <button class="btn btn-primary" @onclick="LogOut">Log Out</button></div>
+            <div>Logged in as @SessionDetails.SessionGuest!.Name</div> <a href="/LogOutPage" target="_self">Log Out</a>
         }
         else if(SessionDetails.IsLoggedIn == true)
         {
-            <div>Logged in as Admin <button class="btn btn-primary" @onclick="LogOut">Log Out</button></div>
+            <div>Logged in as Admin</div> <a href="/LogOutPage" target="_blank">Log Out</a>
         }
         </div>
         <article class="content px-4">

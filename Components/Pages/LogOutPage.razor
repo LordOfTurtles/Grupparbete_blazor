@@ -1,0 +1,17 @@
+@page "/LogOutPage"
+@attribute [RenderModeInteractiveServer]
+@inject NavigationManager NavigationManager
+
+@if(SessionDetails.SessionGuest != null || SessionDetails.IsLoggedIn == true)
+{
+    LogOut();
+}
+
+@code
+{
+    private void LogOut()
+    {
+        SessionDetails.LogOut();
+        NavigationManager.NavigateTo("", true);
+    }
+}
