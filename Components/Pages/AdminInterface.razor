@@ -31,6 +31,7 @@
             <button class="btn btn-primary" @onclick="() => AddRemove(1)">Add</button>
             <button class="btn btn-primary" @onclick="() => AddRemove(2)">Remove</button>
             </div>
+            <button class="btn btn-primary" @onclick="() => AdmineChoice(0)">Back</button>
             break;
 
             case 1:
@@ -56,13 +57,12 @@
             {
                 Count count = new Count();
                 count.c = i;
-                <p>@Hotel.Rooms[i]</p>
+                <p>@((MarkupString)Hotel.Rooms[i].ToString())</p>
                 <button class="btn btn-primary" @onclick="() => RemoveRoom(count.c)">Remove</button>
             }
             <button class="btn btn-primary" @onclick="() => AddRemove(0)">Back</button>
             break;
         }
-        <button class="btn btn-primary" @onclick="() => AdmineChoice(0)">Back</button>
         break;
         
         case 2:
