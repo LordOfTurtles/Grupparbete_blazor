@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
 
 <div class="page">
     <div class="sidebar">
@@ -7,9 +8,15 @@
 
     <main>
         <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+        @if(SessionDetails.SessionGuest != null)
+        {
+            <div>Logged in as @SessionDetails.SessionGuest!.Name <button class="btn btn-primary" @onclick="LogOut">Log Out</button></div>
+        }
+        else if(SessionDetails.IsLoggedIn == true)
+        {
+            <div>Logged in as Admin <button class="btn btn-primary" @onclick="LogOut">Log Out</button></div>
+        }
         </div>
-
         <article class="content px-4">
             @Body
         </article>
@@ -29,3 +36,12 @@
     display:inline-block;
     }
 </style>
+
+@code
+{
+    private void LogOut()
+    {
+        SessionDetails.LogOut();
+        NavigationManager.NavigateTo("", true);
+    }
+}

@@ -2,7 +2,7 @@ namespace Grupparbete_OOP_grund_blazor.Models;
 
 public class SessionDetails
 {
-    public static bool IsLoggedIn;
+    public static bool IsLoggedIn = false;
     public static Guest? SessionGuest {get; set; }
 
     //creating default rooms and guests booking
@@ -23,7 +23,9 @@ public class SessionDetails
         Guest.BookRoom(Hotel.Rooms[1], new DateOnly (2023,12,24), new DateOnly (2023,12,26), b.Guest!);
     }
 
-
-
+    public static void LogOut()
+    {
+        SessionGuest = null;
+        IsLoggedIn = false;
+    }
 }
-

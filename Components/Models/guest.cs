@@ -41,7 +41,7 @@ public class Guest
         Booking myBooking = new Booking(guest, roomBooking, myBp, roomBooking[0].Capacity);
         room.roomBookings.Add(myBooking);
         guest.guestBookings.Add(myBooking);
-        return $"{myBooking.Guest.Name}, {myBooking.BookedRooms[0].RoomNr}, Period: {myBooking.BookingPeriod.StartDate} until {myBooking.BookingPeriod.EndDate} check in at: {myBooking.BookingPeriod.StartTime} check out at: {myBooking.BookingPeriod.EndTime}";
+        return $"{myBooking.Guest!.Name}, {myBooking.BookedRooms[0].RoomNr}, Period: {myBooking.BookingPeriod!.StartDate} until {myBooking.BookingPeriod.EndDate} check in at: {myBooking.BookingPeriod.StartTime} check out at: {myBooking.BookingPeriod.EndTime}";
     }
 
     //Method that checks that a timeperiod doesnt coincide with an already existing booking
@@ -51,7 +51,7 @@ public class Guest
         {
             foreach(Booking b in room.roomBookings)
             {
-                if(startDate >= b.BookingPeriod.StartDate && startDate < b.BookingPeriod.EndDate || 
+                if(startDate >= b.BookingPeriod!.StartDate && startDate < b.BookingPeriod.EndDate || 
                 endDate > b.BookingPeriod.StartDate && endDate <= b.BookingPeriod.EndDate)
                 {
                     return false;

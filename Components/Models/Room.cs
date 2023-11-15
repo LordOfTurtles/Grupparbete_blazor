@@ -5,8 +5,8 @@ public class Room
 {
     public List<Booking> roomBookings = new List<Booking>();
     public List<Booking> pastBookings = new List<Booking>();
-    public string RoomNr;
-    public string Description;
+    public string? RoomNr;
+    public string? Description;
     public double RoomPrice;
     public int Capacity;
 
@@ -39,7 +39,7 @@ public class Room
 
                 foreach(Booking bp in roomBookings)
                 {
-                    rom += $"<br />{bp.BookingPeriod.StartDate} until {bp.BookingPeriod.EndDate} ";
+                    rom += $"<br />{bp.BookingPeriod!.StartDate} until {bp.BookingPeriod.EndDate} ";
                 }
                 //types out every booking that is currently made for room "r"
                 rom += "";

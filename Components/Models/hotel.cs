@@ -9,7 +9,7 @@ class Hotel
 {
    
     public string? Name;
-    public int CurrentGuests;
+    public int? CurrentGuests;
 
     public static string Password = "Hotel123";
     public static List<Room> Rooms = new List<Room>();
@@ -18,7 +18,7 @@ class Hotel
     //method for staff to add rooms through the console
     public static void AddRoom(Room r, out string outputMessage)
     {
-        if(Rooms.Exists(x => x.RoomNr.Contains(r.RoomNr)))
+        if(Rooms.Exists(x => x.RoomNr!.Contains(r.RoomNr!)))
         {
             outputMessage = "Error, room with the specified number already exists";
         }
@@ -31,9 +31,9 @@ class Hotel
     }
 
     //method for staff to remove rooms through the console
-    public static void RemoveRoom(int remove)
+    public static void RemoveRoom(Room remove)
     {
-        Rooms.RemoveAt(remove);
+        Rooms.Remove(remove);
     }
 
     //method for staff to check in guests to a room

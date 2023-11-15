@@ -7,7 +7,6 @@
 <!--if statmens that chech if admin is logged in, option to log out if thats true-->
 @if(SessionDetails.IsLoggedIn == true)
 {
-    <p>Logged in as Admin <button class="btn btn-primary" @onclick="() => LogOut()">Log Out</button></p>
     //a admin interface menu 
     switch (Mode)
     {   
@@ -40,7 +39,7 @@
             case 1:
             //an editform that specifies the room details for that is to be added
             <EditForm Model="@Model" OnSubmit="@Submit">
-            <p>Room number  <InputText @bind-Value="Model.RoomNr" /></p>
+            <p>Room number  <InputText @bind-Value="Model!.RoomNr" /></p>
             <p>Description  <InputText @bind-Value="Model.Description" /></p>
             <p>Room price  <InputNumber @bind-Value="Model.RoomPrice" /></p>
             <p>Max capacity  <InputNumber @bind-Value="Model.Capacity" /></p> 
@@ -61,9 +60,9 @@
             for(int i = 0; i < Hotel.Rooms.Count; i++)
             {
                 Count count = new Count();
-                count.c = i;
+                count.room = Hotel.Rooms[i];
                 <p>@((MarkupString)Hotel.Rooms[i].ToString())</p>
-                <button class="btn btn-primary" @onclick="() => RemoveRoom(count.c)">Remove</button>
+                <button class="btn btn-primary" @onclick="() => RemoveRoom(count.room)">Remove</button>
             }
             <button class="btn btn-primary" @onclick="() => AddRemove(0)">Back</button>
             break;
@@ -88,7 +87,7 @@
                             {
                                 Count c  = new Count();
                                 c.booking = b;
-                                <p>@b.Guest.Name <br /> @b.BookingPeriod</p>
+                                <p>@b.Guest!.Name <br /> @b.BookingPeriod</p>
                                 <button class="btn btn-primary" @onclick="() => CheckIn(c.booking)">Check in</button>
                                 x++;
                             }
@@ -115,7 +114,7 @@
                                 Count c = new Count();
                                 c.room = Hotel.Rooms[i];
                                 c.booking = b;
-                                <p>@b.Guest.Name <br /> @((MarkupString)b.ToString())</p>
+                                <p>@b.Guest!.Name <br /> @((MarkupString)b.ToString())</p>
                                 <button class="btn btn-primary" @onclick="() => CheckOut(c.room, c.booking)">Check Out</button>
 
                                 
@@ -165,8 +164,8 @@ else
 
     class Count
     {
-        public Room room; 
-        public Booking booking;
+        public Room? room; 
+        public Booking? booking;
 
         public int c;
     }
@@ -194,9 +193,9 @@ else
     }
 
     //a method that controlls removeroom
-    void RemoveRoom(int i) //skicka in rum istället
+    void RemoveRoom(Room r)
     {
-        Hotel.RemoveRoom(i);
+        Hotel.RemoveRoom(r);
     }
 
     //a methodthat checks in a specific booking
@@ -216,7 +215,7 @@ else
     //a method that checks that all feilds are filled in and add if thats the case
     private void Submit()
     {
-        Room room = new Room(Model.RoomNr, Model.Description, Model.RoomPrice, Model.Capacity, Model.FloorNr);
+        Room room = new Room(Model!.RoomNr!, Model.Description!, Model.RoomPrice, Model.Capacity, Model.FloorNr);
 
         if(Model.RoomNr != null && Model.Description != null && Model.RoomPrice != 0 && 
            Model.Capacity !=0 && Model.FloorNr != 0)
