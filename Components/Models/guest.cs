@@ -33,15 +33,16 @@ public class Guest
         return output;
     }
 
-    public static string BookRoom(Room room, DateOnly startDate, DateOnly endDate, Guest guest)
+    public static void BookRoom(List<Room> roomBooking, DateOnly startDate, DateOnly endDate, Guest guest)
     {
-        List<Room> roomBooking = new List<Room>();
+        
         BookingPeriod myBp = new BookingPeriod(startDate, endDate);
-        roomBooking.Add(room);
         Booking myBooking = new Booking(guest, roomBooking, myBp, roomBooking[0].Capacity);
-        room.roomBookings.Add(myBooking);
+        foreach(Room r in roomBooking)
+        {
+            r.roomBookings.Add(myBooking);
+        }
         guest.guestBookings.Add(myBooking);
-        return $"{myBooking.Guest!.Name}, {myBooking.BookedRooms[0].RoomNr}, Period: {myBooking.BookingPeriod!.StartDate} until {myBooking.BookingPeriod.EndDate} check in at: {myBooking.BookingPeriod.StartTime} check out at: {myBooking.BookingPeriod.EndTime}";
     }
 
     //Method that checks that a timeperiod doesnt coincide with an already existing booking

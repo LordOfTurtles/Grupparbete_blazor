@@ -99,7 +99,16 @@
         break;
         
         case 3:
-            <h1>Currently checked in guests</h1>
+            if(CurrentlyCheckedIn())
+            {
+                <h1>Currently checked in guests</h1>
+            }
+            else
+            {
+                <h2>No guest currently checked in</h2>
+            }
+            
+            
             //for loops that list available rooms to check out
             for(int i = 0; i < Hotel.Rooms.Count; i++)
             {
@@ -227,6 +236,20 @@ else
         {
             ErrorMsg = "Error, all fields must be filled in";
         }
+    }
+
+    bool CurrentlyCheckedIn()
+    {
+        foreach(Room r in Hotel.Rooms)
+        {
+            if(r.roomBookings.Exists(x => x.IsChecked.Equals(true)))
+            {
+                return true;
+            }
+
+        }
+        return false;
+
     }
     
 }

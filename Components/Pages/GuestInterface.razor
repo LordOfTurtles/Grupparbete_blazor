@@ -58,15 +58,41 @@ else
                 <p>@((MarkupString)r.ToString())</p>
                 if(Guest.CompareDates(tempDates!.startDate, tempDates.endDate, r) == true)
                 {
-                    <p>
-                    <button class="btn btn-primary" @onclick="() => BookRoom(r)">Book this room</button>
-                    </p>
+                    if(desiredRoom.Exists(x => x == r))
+                    {
+                        <p>
+                        <button class="btn btn-primary" @onclick="() => RemoveRoom(r)">Remove from booking</button>
+                        </p>
+                    }
+                    else
+                    {
+                        <p>
+                        <button class="btn btn-primary" @onclick="() => AddRoom(r)">Add to booking</button>
+                        </p>
+                    }
+                    
                 }
                 else
                 {
-                    <p>Room is already booked during period @tempDates.startDate - @tempDates.endDate</p>
+                    if(BookingOwner(r))
+                    {
+                        <p> This room is already booked by you during period @tempDates.startDate - @tempDates.endDate</p>
+                    }
+                    else
+                    {
+                        <p>Room is already booked during period @tempDates.startDate - @tempDates.endDate</p>
+
+                    }
+                   
                 }
+                
             }
+        }
+        if(desiredRoom.Count > 0)
+        {
+            <p>
+            <button class="btn btn-primary" @onclick="() => BookRoom(desiredRoom)">Book rooms</button>
+            </p>
         }
         <p>@message</p>
         break;
@@ -149,6 +175,7 @@ else
     private Temp? tempDates = new Temp();
     private TempReview tempReview = new TempReview();
     List<Room> tempRooms = new List<Room>();
+    List<Room> desiredRoom = new List<Room>();
 
     protected override void OnInitialized() => Model ??= new();
 
@@ -198,13 +225,22 @@ else
     }
 
     //a method that books the specified room for the booking period if there are no overlaps
-    private void BookRoom(Room r)
+    private void BookRoom(List<Room> rooms)
     {
-        if(Guest.CompareDates(tempDates!.startDate, tempDates.endDate, r) == true)
-        {
-        Guest.BookRoom(r, tempDates.startDate, tempDates.endDate, SessionDetails.SessionGuest!);
-        message = "Room successfully booked";
-        }
+       
+        Guest.BookRoom(rooms, tempDates.startDate, tempDates.endDate, SessionDetails.SessionGuest!);
+        message = "Booking successfull";
+       
+    }
+
+    private void AddRoom(Room r)
+    {
+        desiredRoom.Add(r);
+    }
+
+    private void RemoveRoom(Room r)
+    {
+        desiredRoom.Remove(r);
     }
 
     //a method that sets which booking that are being reviwed
@@ -218,6 +254,18 @@ else
     {
         tempBooking.Review = tempReview.review;
         tempBooking = new Booking();
+    }
+
+    bool BookingOwner(Room r)
+    {
+        foreach(Booking b in r.roomBookings)
+        {
+            if(b.Guest == SessionDetails.SessionGuest && !Guest.CompareDates(tempDates!.startDate, tempDates.endDate, r))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     class TempReview

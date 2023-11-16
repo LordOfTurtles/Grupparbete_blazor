@@ -20,7 +20,9 @@ public class SessionDetails
         Booking b = new Booking(GuestList.guestList[0], new List<Room>(), new BookingPeriod(new DateOnly (2023,12,24), new DateOnly (2023,12,26)), 1);
         b.BookedRooms.Add(Hotel.Rooms[1]);
 
-        Guest.BookRoom(Hotel.Rooms[1], new DateOnly (2023,12,24), new DateOnly (2023,12,26), b.Guest!);
+        List<Room> rooms = new List<Room>();
+        rooms.Add(Hotel.Rooms[1]);
+        Guest.BookRoom(rooms, new DateOnly (2023,12,24), new DateOnly (2023,12,26), b.Guest!);
     }
 
     public static void LogOut()
