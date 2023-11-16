@@ -70,28 +70,31 @@
         break;
         
         case 2:
+            tempBookings = new List<Booking>();
             //a for loop that list existing rooms that have not yet been checked in
             for(int i = 0; i < Hotel.Rooms.Count; i++)
                 {
                     if(Hotel.Rooms[i].roomBookings.Count > 0 &&
                        Hotel.Rooms[i].roomBookings.Exists(x => x.IsChecked.Equals(false)))
                     {
-                        
-                        <h1>@Hotel.Rooms[i].RoomNr @Hotel.Rooms[i].Description</h1>
-                        int x = 0;
-                        
                         //a forech loop that list every booking for that room that has not been checked in
                         foreach(Booking b in Hotel.Rooms[i].roomBookings)
                         {
-                            if(b.IsChecked == false)
+                            if(b.IsChecked == false && !tempBookings.Exists(x => x == b))
                             {
-                                Count c  = new Count();
-                                c.booking = b;
-                                <p>@b.Guest!.Name <br /> @b.BookingPeriod</p>
-                                <button class="btn btn-primary" @onclick="() => CheckIn(c.booking)">Check in</button>
-                                x++;
+                                tempBookings.Add(b);
                             }
                         }
+                    }
+                }
+                foreach(Booking b in tempBookings)
+                {
+                    if(b.IsChecked == false)
+                    {
+                        Count c  = new Count();
+                        c.booking = b;
+                        <p><b>@b.Guest!.Name</b> <br /> @((MarkupString)b.BookingPeriod!.ToString()) <br /> @((MarkupString)CheckableRooms(b))</p>
+                        <button class="btn btn-primary" @onclick="() => CheckIn(c.booking)">Check in</button>
                     }
                 }
             <button class="btn btn-primary" @onclick="() => AdmineChoice(0)">Back</button>
@@ -99,6 +102,7 @@
         break;
         
         case 3:
+            tempBookings = new List<Booking>();
             if(CurrentlyCheckedIn())
             {
                 <h1>Currently checked in guests</h1>
@@ -118,19 +122,26 @@
                     //foreach loop that list checked in bookings
                     foreach(Booking b in Hotel.Rooms[i].roomBookings)
                         {
-                            if(b.IsChecked == true)
+                            if(b.IsChecked == true && !tempBookings.Exists(x => x == b))
                             {
-                                Count c = new Count();
-                                c.room = Hotel.Rooms[i];
-                                c.booking = b;
-                                <p>@b.Guest!.Name <br /> @((MarkupString)b.ToString())</p>
-                                <button class="btn btn-primary" @onclick="() => CheckOut(c.room, c.booking)">Check Out</button>
-
-                                
+                                tempBookings.Add(b);
                             }
                         }
                 }
-            }<button class="btn btn-primary" @onclick="() => AdmineChoice(0)">Back</button>
+            }
+            foreach(Booking b in tempBookings)
+            {
+                if(b.IsChecked == true)
+                {
+                    Count c  = new Count();
+                    c.booking = b;
+                    <p><b>@b.Guest!.Name</b> <br /> @((MarkupString)b.BookingPeriod!.ToString()) <br /> @((MarkupString)CheckableRooms(b))</p>
+                    <button class="btn btn-primary" @onclick="() => CheckOut(c.booking)">Check Out</button>
+                }
+            }
+            <div>
+            <button class="btn btn-primary" @onclick="() => AdmineChoice(0)">Back</button>
+            </div>
         break;
         
         case 4:
@@ -150,7 +161,9 @@
                 @((MarkupString)body)
                 </p>
             }
+            <div>
             <button class="btn btn-primary" @onclick="() => AdmineChoice(0)">Back</button>
+            </div>
             break;
     }
 <p>@ErrorMsg</p>
@@ -170,6 +183,8 @@ else
     private Room? Model {get; set;}
     private int IntAddRemove = 0;
     private int Mode = 0;
+
+    List<Booking> tempBookings = new List<Booking>();
 
     class Count
     {
@@ -194,6 +209,16 @@ else
 
     }
 
+    string CheckableRooms(Booking b)
+    {
+        string roomString = "<b>Rooms:</b> ";
+        foreach(Room r in b.BookedRooms)
+        {
+            roomString += $"{r.RoomNr}. '{r.Description}' ";
+        }
+        return roomString;
+    }
+
     //a method that controlls the addremove room admin menu
     void AddRemove(int i)
     {
@@ -215,9 +240,9 @@ else
     }
 
     //a method that checksout a specific booking
-    void CheckOut(Room r ,Booking b)
+    void CheckOut(Booking b)
     {
-        Hotel.CheckOut(b, r);
+        Hotel.CheckOut(b);
         ErrorMsg =$"Check-out succesfull";
     }
 

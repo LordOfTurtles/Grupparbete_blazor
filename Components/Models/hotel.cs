@@ -43,14 +43,17 @@ class Hotel
     }
 
     //method for staff to check guests out of their room
-    public static void  CheckOut(Booking b, Room r)
+    public static void  CheckOut(Booking b)
     
     {
         b.IsChecked = false;
-        r.pastBookings.Add(b);
         b.Guest!.guestPastBookings.Add(b);
         b.Guest.guestBookings.Remove(b);
+        foreach(Room r in b.BookedRooms)
+        {
+        r.pastBookings.Add(b);
         r.roomBookings.Remove(b);
+        }
 
     }
 

@@ -72,7 +72,7 @@ public class BookingPeriod
     public override string ToString()
     {   
 
-        return $"Start: {StartDate} End: {EndDate}";
+        return $"<b>Start:</b> {StartDate} <b>End:</b> {EndDate}";
     }
 
 
