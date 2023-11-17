@@ -1,0 +1,48 @@
+Presentation 20/11
+
+-Visa UML diagrammet
+	-Fokus på klasserna (Guest, Room, Booking, Hotel)
+	-Beskriv vad vi utgick ifrån
+	-Diagrammet är uppdaterat
+	Arthur
+
+-Gå igenom det mest intressanta i koden
+	-Rena-ish metoder
+	-Uppdelning Blazor/C#-kod
+	-Visa klasser
+	Erik
+
+-Vilken funktionalitet har vi uppnått?
+	-Uppnått all funktionalitet i uppgiftsbeskrivningen
+	-Extra funktionalitet -login
+	-Utökad funktionalitet -boka fler rum
+	Sandra
+
+-Vilken funktionalitet skulle vi lägga till om vi hade mer tid?
+	-Inte bara hotel, t.ex stugor, lägenhet etc. (klassarv? Ha en basklass för bokningsbart objekt som de olika variationerna ärver ifrån)
+	-Avbokning. Både för gäst och staff.
+	-Utökad review-funktionalitet med ratings etc.
+	Sandra
+
+Hur skulle vi refaktorera koden om vi hade mer tid?
+	-Globala listor kanske skulle vara bättre istället för separata listor i objekt (cross-dependencies)
+	-Inte blazor? Mest för att inte krångla till det med att blanda C# och html
+	Arthur
+
+Vad har varit svårt?
+	-Blazor
+	-Hålla reda på olika saker när projektet börjar bli stort
+	Erik
+
+	-Mycket nytt
+	-Komma ihåg hur allt hänger ihop mellan olika filer och klasser
+	-Veta vad som orsakar problem (rödmarkerat när det inte borde vara det, vscode krånglar till det)
+	Sandra, Arthur
+
+Vad har vi lärt oss
+	-Prata kod och bolla varandras tankar och idéer
+	-Lite html
+	-Saker som Find/Exists/Contains för listor
+	-Skapa UML-diagram
+	-Rena metoder i förberedande syfte
+	Erik, Arthur, Sandra
