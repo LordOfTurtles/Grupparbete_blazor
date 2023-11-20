@@ -4,11 +4,12 @@
 @using System.Web
 @using System.Text.RegularExpressions;
 
+<h1 style="font-family:Times New Roman">Guest Menu</h1>
 <!--checks if there is currently a guest whos logged in -->
 @if(SessionDetails.SessionGuest == null)
 {
     <p>Need to be logged in to access guest functions</p>
-    <button class="btn btn-primary" @onclick="() => LogOut()">Main menu</button>
+    <button class="btn btn-primary" @onclick="() => MovePage()">Main menu</button>
 }
 else
 {
@@ -17,6 +18,7 @@ else
     switch(option)
     {
         case 0:
+        <p>Please select an option below</p>
         <div>
             <button class="btn btn-primary" @onclick="() => GuestChoice(1)">Check availability</button>
             
@@ -40,7 +42,7 @@ else
         //lets guest create a booking with room and dates
         case 2:
         //a form where the guest specifies what the guest is looking for
-        <EditForm Model="@Model" OnSubmit="@Submit">
+        <EditForm style="margin-bottom: 10px;" Model="@Model" OnSubmit="@Submit">
         <p>What is your max price per night?  <InputNumber @bind-Value="Model!.room.RoomPrice" /></p>
         <p>How many guests are staying?  <InputNumber @bind-Value="Model.room.Capacity" /></p>
         <p>What date would you like to start your booking?  <InputDate @bind-Value="Model.startDate" /></p>
@@ -52,23 +54,22 @@ else
         // an if statment that check if theres any rooms that matches the guests inputs, also checks so no bookings can overlap with the desired booking period
         if(tempRooms.Count() > 0)
         {
+            <p>Please select the rooms you would like to book</p>
             foreach(Room r in tempRooms)
             {
                 safe ++;
-                <p>@((MarkupString)r.ToString())</p>
-                if(Guest.CompareDates(tempDates!.startDate, tempDates.endDate, r) == true)
+                <p style="border-style : solid; border-width : 2px; padding-left : 5px; width : 400px;">
+                @((MarkupString)r.ToString())
+                @if(Guest.CompareDates(tempDates!.startDate, tempDates.endDate, r) == true)
                 {
                     if(desiredRoom.Exists(x => x == r))
                     {
-                        <p>
-                        <button class="btn btn-primary" @onclick="() => RemoveRoom(r)">Remove from booking</button>
-                        </p>
+                        <br /><button style="margin-bottom: 5px; margin-top: 10px; background-color: rgb(172, 0, 0); border-color: red;" class="btn btn-primary" @onclick="() => RemoveRoom(r)">Remove from booking</button>
+
                     }
                     else
                     {
-                        <p>
-                        <button class="btn btn-primary" @onclick="() => AddRoom(r)">Add to booking</button>
-                        </p>
+                        <br /><button style="margin-bottom: 5px; margin-top: 10px; background-color: green; border-color: rgb(0, 186, 0);" class="btn btn-primary" @onclick="() => AddRoom(r)">Add to booking</button>
                     }
                     
                 }
@@ -76,7 +77,7 @@ else
                 {
                     if(BookingOwner(r))
                     {
-                        <p> This room is already booked by you during period @tempDates.startDate - @tempDates.endDate</p>
+                        <p>This room is already booked by you during period @tempDates.startDate - @tempDates.endDate</p>
                     }
                     else
                     {
@@ -85,32 +86,35 @@ else
                     }
                    
                 }
+                </p>
                 
             }
         }
         if(desiredRoom.Count > 0)
         {
+            <p style="font-size: 20px; margin-top: 25px;">Booking Details</p>
+            <p style="border-style : solid; border-width : 2px; padding-left : 5px; width : 500px;">
+            <b>Period: </b>@tempDates!.startDate until @tempDates.endDate<br />
+            @((MarkupString)ConfirmBooking())
+            </p>
             <p>
-            <button class="btn btn-primary" @onclick="() => BookRoom(desiredRoom)">Book rooms</button>
+            <button class="btn btn-primary" @onclick="() => BookRoom(desiredRoom)">Confirm Booking</button>
             </p>
         }
-        <p>@message</p>
         break;
         case 3:
         //if statment thats checks if the guest has any past bookings that they have not yet written a review for
         if(SessionDetails.SessionGuest.guestPastBookings.Count > 0 && SessionDetails.SessionGuest.guestPastBookings.Exists(x => x.Review == null))
         {
-            if(tempBooking.Guest == null)
+            if(reviewing == false)
             {
                 <p><b>Which booking would you like to write a review for?</b></p>
                 foreach(Booking b in SessionDetails.SessionGuest.guestPastBookings)
                 {
                     if(b.Review == null)
                     {
-                    <p>
-                        @((MarkupString)b.ToString())
-                    </p>
-                    <p>
+                    <p style="margin-bottom: 10px;">
+                        @((MarkupString)b.ToString())<br />
                         <button class="btn btn-primary" @onclick="() => PickReview(b)">Review</button>
                     </p>
                     }
@@ -121,8 +125,9 @@ else
                 <p>
                 @((MarkupString)tempBooking.ToString())
                 </p>
+                <p><b>Please enter your review</b></p>
                 <EditForm Model="@tempReview" OnSubmit="@Review">
-                <div>
+                <div style="margin-bottom: 10px">
                     <InputTextArea class="form-control" style="height: 150px; width: 500px" @bind-Value="tempReview.review" />
                 </div>
                 <div>
@@ -137,7 +142,7 @@ else
             <p><b>No bookings available to review</b></p>
         }
         <div>
-        <button class="btn btn-primary" @onclick="() => GuestChoice(0)">Back</button>
+        <button style="margin-top: 20px;" class="btn btn-primary" @onclick="() => GuestChoice(0)">Back</button>
         </div>
 
         break;
@@ -149,8 +154,10 @@ else
             {
                 if(b.Review != null)
                 {
-                    <p>@((MarkupString)b.ToString())</p>
-                    <p>"@b.Review"</p>
+                    <p>@((MarkupString)b.ToString())<br /><b>Review</b>
+                        <p style="border-style : solid; border-width : 1px; padding-left : 5px; width : 400px; min-height: 4em;">@b.Review</p>
+                    </p>
+
                 }
             }
         }
@@ -159,14 +166,16 @@ else
             <p><b>No reviews made so far</b></p>
         }
         <div>
-        <button class="btn btn-primary" @onclick="() => GuestChoice(0)">Back</button>
+        <button style="margin-top: 10px;" class="btn btn-primary" @onclick="() => GuestChoice(0)">Back</button>
         </div>
         break;
     }
 }
+<p style="margin-top: 25px"><i>@message</i></p>
 
 @code
 {
+    private bool reviewing = false;
     private string? review;
     private int safe = 0;
     private string message = "";
@@ -187,13 +196,11 @@ else
         option = i;
         Model = new Temp();
         tempRooms.Clear();
+        reviewing = false;
     }
-
-    //a method that logs out the guest and navigates to home
-    private void LogOut()
+    private void MovePage()
     {
         NavigationManager.NavigateTo("");
-        SessionDetails.SessionGuest = null;
     }
 
     //a method that compares the guest inputs for start and denddate, roomprice and capacity.
@@ -229,7 +236,8 @@ else
     {
         Guest.BookRoom(rooms, tempDates!.startDate, tempDates.endDate, SessionDetails.SessionGuest!);
         desiredRoom = new List<Room>();
-        message = "Booking successfull";
+        message = "Booking successful";
+        Submit();
        
     }
 
@@ -247,6 +255,7 @@ else
     private void PickReview(Booking b)
     {
         tempBooking = b;
+        reviewing = true;
     }
 
     //a method that saves the review to the booking
@@ -266,6 +275,27 @@ else
             }
         }
         return false;
+    }
+
+    string ConfirmBooking()
+    {
+        string total = "<b>Rooms:</b> ";
+        double pricetotal = 0;
+        foreach(Room r in desiredRoom)
+        {
+            total += $"'{r.RoomNr}. {r.Description}' ";
+            pricetotal += r.RoomPrice;
+        }
+        int span = tempDates!.endDate.DayNumber - tempDates.startDate.DayNumber;
+
+        double fullpricetotal = pricetotal * span;
+
+        fullpricetotal = Math.Round(fullpricetotal, 2);
+        pricetotal = Math.Round(pricetotal, 2);
+
+
+        total += $"<br /><b>Total price:</b> {fullpricetotal}<br /><b>Price per night:</b> {pricetotal}";
+        return total;
     }
 
     class TempReview

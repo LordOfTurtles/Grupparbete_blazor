@@ -30,4 +30,5 @@ public class SessionDetails
         SessionGuest = null;
         IsLoggedIn = false;
     }
+    
 }

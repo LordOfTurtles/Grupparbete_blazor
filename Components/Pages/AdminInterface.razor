@@ -3,7 +3,7 @@
 @inject NavigationManager NavigationManager
 
 <PageTitle>AdminInterface</PageTitle>
-<h1>staff</h1>
+<h1 style="font-family:Times New Roman">Staff Menu</h1>
 <!--if statmens that chech if admin is logged in, option to log out if thats true-->
 @if(SessionDetails.IsLoggedIn == true)
 {
@@ -12,6 +12,7 @@
     {   
         
         case 0:
+        <p>Please select an option below</p>
         <div>
             <button class="btn btn-primary" @onclick="() => AdmineChoice(1)">Add or remove a room</button>
             
@@ -33,7 +34,9 @@
             <button class="btn btn-primary" @onclick="() => AddRemove(1)">Add</button>
             <button class="btn btn-primary" @onclick="() => AddRemove(2)">Remove</button>
             </div>
+            <div style="margin-top: 5px;">
             <button class="btn btn-primary" @onclick="() => AdmineChoice(0)">Back</button>
+            </div>
             break;
 
             case 1:
@@ -45,7 +48,9 @@
             <p>Max capacity  <InputNumber @bind-Value="Model.Capacity" /></p> 
             <p>Floor number  <InputNumber @bind-Value="Model.FloorNr" /></p>       
             <button type="submit">Submit</button> 
+            <div style="margin-top: 5px;">
             <button class="btn btn-primary" @onclick="() => AddRemove(0)">Back</button>
+            </div>
             </EditForm>
             
             break;
@@ -61,10 +66,12 @@
             {
                 Count count = new Count();
                 count.room = Hotel.Rooms[i];
-                <p>@((MarkupString)Hotel.Rooms[i].ToString())</p>
-                <button class="btn btn-primary" @onclick="() => RemoveRoom(count.room)">Remove</button>
+                <p style="border-style : solid; border-width : 2px; padding-left : 5px; width : 400px;">@((MarkupString)Hotel.Rooms[i].ToString())<br />
+                <button style="margin-bottom: 5px; margin-top: 10px"class="btn btn-primary" @onclick="() => RemoveRoom(count.room)">Remove</button></p>
             }
+            <div style="margin-top: 5px;">
             <button class="btn btn-primary" @onclick="() => AddRemove(0)">Back</button>
+            </div>
             break;
         }
         break;
@@ -73,31 +80,41 @@
             tempBookings = new List<Booking>();
             //a for loop that list existing rooms that have not yet been checked in
             for(int i = 0; i < Hotel.Rooms.Count; i++)
+            {
+                if(Hotel.Rooms[i].roomBookings.Count > 0 &&
+                    Hotel.Rooms[i].roomBookings.Exists(x => x.IsChecked.Equals(false)))
                 {
-                    if(Hotel.Rooms[i].roomBookings.Count > 0 &&
-                       Hotel.Rooms[i].roomBookings.Exists(x => x.IsChecked.Equals(false)))
+                    //a forech loop that list every booking for that room that has not been checked in
+                    foreach(Booking b in Hotel.Rooms[i].roomBookings)
                     {
-                        //a forech loop that list every booking for that room that has not been checked in
-                        foreach(Booking b in Hotel.Rooms[i].roomBookings)
+                        if(b.IsChecked == false && !tempBookings.Exists(x => x == b))
                         {
-                            if(b.IsChecked == false && !tempBookings.Exists(x => x == b))
-                            {
-                                tempBookings.Add(b);
-                            }
+                            tempBookings.Add(b);
                         }
                     }
                 }
+            }
+            if(tempBookings.Count > 0)
+            {
                 foreach(Booking b in tempBookings)
                 {
                     if(b.IsChecked == false)
                     {
                         Count c  = new Count();
                         c.booking = b;
-                        <p><b>@b.Guest!.Name</b> <br /> @((MarkupString)b.BookingPeriod!.ToString()) <br /> @((MarkupString)CheckableRooms(b))</p>
-                        <button class="btn btn-primary" @onclick="() => CheckIn(c.booking)">Check in</button>
+                        <p style="border-style : solid; border-width : 2px; padding-left : 5px; width : 400px;"><b>@b.Guest!.Name</b> <br /> @((MarkupString)b.BookingPeriod!.ToString()) <br /> @((MarkupString)CheckableRooms(b))
+                        <br /><button style="margin-bottom: 5px; margin-top: 10px" class="btn btn-primary" @onclick="() => CheckIn(c.booking)">Check in</button>
+                        </p>
                     }
                 }
+            }
+            else
+            {
+                <h2>Currently no bookings to check-in</h2>
+            }
+            <div>
             <button class="btn btn-primary" @onclick="() => AdmineChoice(0)">Back</button>
+            </div>
            
         break;
         
@@ -105,7 +122,7 @@
             tempBookings = new List<Booking>();
             if(CurrentlyCheckedIn())
             {
-                <h1>Currently checked in guests</h1>
+                <h2>Currently checked in guests</h2>
             }
             else
             {
@@ -139,7 +156,7 @@
                     <button class="btn btn-primary" @onclick="() => CheckOut(c.booking)">Check Out</button>
                 }
             }
-            <div>
+            <div style="margin-top: 5px;">
             <button class="btn btn-primary" @onclick="() => AdmineChoice(0)">Back</button>
             </div>
         break;
@@ -161,17 +178,17 @@
                 @((MarkupString)body)
                 </p>
             }
-            <div>
+            <div style="margin-top: 5px;">
             <button class="btn btn-primary" @onclick="() => AdmineChoice(0)">Back</button>
             </div>
             break;
     }
-<p>@ErrorMsg</p>
+<p style="margin-top: 25px"><i>@ErrorMsg</i></p>
 } 
 else
 {
     <p>Need to be logged in to access Admin functions</p>
-    <button class="btn btn-primary" @onclick="() => LogOut()">Main menu</button>
+    <button class="btn btn-primary" @onclick="() => MovePage()">Main menu</button>
 }
 
 
@@ -195,9 +212,8 @@ else
     }
 
     //a log ou method, navigates back to home when logges out
-    void LogOut()
+    void MovePage()
     {
-        SessionDetails.IsLoggedIn = false;
         NavigationManager.NavigateTo("");
     }
 
@@ -230,20 +246,21 @@ else
     void RemoveRoom(Room r)
     {
         Hotel.RemoveRoom(r);
+        ErrorMsg = $"Room '{r.RoomNr}. {r.Description}' removed successfully";
     }
 
     //a methodthat checks in a specific booking
     void CheckIn(Booking b)
     {
         Hotel.CheckIn(b);
-        ErrorMsg = $"has been check-in succesfully";
+        ErrorMsg = $"Check-in successful";
     }
 
     //a method that checksout a specific booking
     void CheckOut(Booking b)
     {
         Hotel.CheckOut(b);
-        ErrorMsg =$"Check-out succesfull";
+        ErrorMsg = $"Check-out succesful";
     }
 
     //a method that checks that all feilds are filled in and add if thats the case

@@ -25,7 +25,7 @@ class Hotel
         else
         {
             Rooms.Add(r);
-            outputMessage = "Room added succesfully";
+            outputMessage = $"Room '{r.RoomNr}. {r.Description}' added succesfully";
         }
 
     }

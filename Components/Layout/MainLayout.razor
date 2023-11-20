@@ -10,11 +10,11 @@
         <div class="top-row px-4">
         @if(SessionDetails.SessionGuest != null)
         {
-            <div>Logged in as @SessionDetails.SessionGuest!.Name</div> <a href="/LogOutPage" target="_self">Log Out</a>
+            <div>Logged in as @SessionDetails.SessionGuest!.Name</div> <a href="/LogOut/true/" target="_self">Log Out</a>
         }
         else if(SessionDetails.IsLoggedIn == true)
         {
-            <div>Logged in as Admin</div> <a href="/LogOutPage" target="_blank">Log Out</a>
+            <div>Logged in as Admin</div> <a href="/LogOut/true/" target="_self">Log Out</a>
         }
         </div>
         <article class="content px-4">
@@ -35,13 +35,12 @@
     height:5px;
     display:inline-block;
     }
+    table, th, td {
+    border:2px solid black;
+}
 </style>
 
 @code
 {
-    private void LogOut()
-    {
-        SessionDetails.LogOut();
-        NavigationManager.NavigateTo("", true);
-    }
+
 }
