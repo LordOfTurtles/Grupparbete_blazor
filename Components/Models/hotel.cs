@@ -8,8 +8,8 @@ class Hotel
 
 {
    
-    public string? Name;
-    public int? CurrentGuests;
+    public string? Name = "Hotel Trangius";
+    public int? CurrentGuests = 0;
 
     public static string Password = "Hotel123";
     public static List<Room> Rooms = new List<Room>();

@@ -139,7 +139,7 @@ else
         }
         else
         {
-            <p><b>No bookings available to review</b></p>
+            <h2>No bookings available to review</h2>
         }
         <div>
         <button style="margin-top: 20px;" class="btn btn-primary" @onclick="() => GuestChoice(0)">Back</button>
@@ -150,6 +150,7 @@ else
         //chekcs if there is any bookings that the guest has written a review for
         if(SessionDetails.SessionGuest.guestPastBookings.Count > 0 && SessionDetails.SessionGuest.guestPastBookings.Exists(x => x.Review != null))
         {
+            <h2>Your reviews</h2>
             foreach(Booking b in SessionDetails.SessionGuest.guestPastBookings)
             {
                 if(b.Review != null)
@@ -163,7 +164,7 @@ else
         }
         else
         {
-            <p><b>No reviews made so far</b></p>
+            <h2>No reviews made so far</h2>
         }
         <div>
         <button style="margin-top: 10px;" class="btn btn-primary" @onclick="() => GuestChoice(0)">Back</button>
@@ -176,7 +177,6 @@ else
 @code
 {
     private bool reviewing = false;
-    private string? review;
     private int safe = 0;
     private string message = "";
     private Temp? Model {get; set;}
