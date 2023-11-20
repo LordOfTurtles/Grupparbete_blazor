@@ -197,6 +197,7 @@ else
         Model = new Temp();
         tempRooms.Clear();
         reviewing = false;
+        message = "";
     }
     private void MovePage()
     {
@@ -263,6 +264,7 @@ else
     {
         tempBooking.Review = tempReview.review;
         tempBooking = new Booking();
+        message = "Review submitted";
     }
 
     bool BookingOwner(Room r)

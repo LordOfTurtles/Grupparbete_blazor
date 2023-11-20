@@ -152,8 +152,8 @@
                 {
                     Count c  = new Count();
                     c.booking = b;
-                    <p><b>@b.Guest!.Name</b> <br /> @((MarkupString)b.BookingPeriod!.ToString()) <br /> @((MarkupString)CheckableRooms(b))</p>
-                    <button class="btn btn-primary" @onclick="() => CheckOut(c.booking)">Check Out</button>
+                    <p style="border-style : solid; border-width : 2px; padding-left : 5px; width : 400px;"><b>@b.Guest!.Name</b> <br /> @((MarkupString)b.BookingPeriod!.ToString()) <br /> @((MarkupString)CheckableRooms(b))</p>
+                    <button style="margin-bottom: 5px; margin-top: 10px" class="btn btn-primary" @onclick="() => CheckOut(c.booking)">Check Out</button>
                 }
             }
             <div style="margin-top: 5px;">

@@ -37,7 +37,7 @@
                 <!--a form model where the user can atempt to login with password and email -->
                 <EditForm Model="@Model" OnSubmit="@Submit">
                 <p>Email  <InputText @bind-Value="Model!.Email" /></p>
-                <p>Password  <InputText @bind-Value="Model!.Password" /></p>
+                <p>Password  <InputText type="password" autocomplete="off" @bind-Value="Model!.Password" /></p>
                 <button type="submit">Submit</button> <button class="btn btn-primary" @onclick="() => GuestMenu(0)">Back</button>
                 </EditForm>
                 
@@ -60,7 +60,7 @@
         <p>Logging in as admin</p>
         <!--A form model for admin to login with the admin password-->
         <EditForm Model="@Admin" OnSubmit="@AdminLogIn">
-        <p>Password  <InputText @bind-Value="Admin!.AdminPassword" /></p>
+        <p>Password  <InputText type="password" autocomplete="off" @bind-Value="Admin!.AdminPassword" /></p>
         <button type="submit">Submit</button> <button class="btn btn-primary" @onclick="() => MainMenu(0)">Back</button>
         </EditForm>
         
